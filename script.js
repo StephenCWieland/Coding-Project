@@ -25,7 +25,7 @@ if (contactForm) {
         console.log('Form submitted:', formObject);
         
         // Show success message
-        alert('Thank you for your message! We will get back to you soon.');
+        alert('Thank you for your message, my dude! We will get back to you soon.');
         this.reset();
     });
 }
