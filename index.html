@@ -16,9 +16,16 @@
                 <li><a href="#dashboard">Dashboard</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
-                🌙
-            </button>
+            <div class="header-actions">
+                <div class="search-container">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search..." aria-label="Search">
+                    <button id="search-btn" class="search-btn" aria-label="Search">🔍</button>
+                    <div id="search-results" class="search-results"></div>
+                </div>
+                <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                    🌙
+                </button>
+            </div>
         </nav>
     </header>
 
