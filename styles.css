@@ -97,6 +97,46 @@ section {
     background-color: #2980b9;
 }
 
+/* Hero stats section */
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-width: 120px;
+    transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 1rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 /* About section */
 .about {
     background-color: white;
@@ -283,6 +323,23 @@ body.dark-mode .hero h1 {
 }
 
 body.dark-mode .hero p {
+    color: #b0b0b0;
+}
+
+body.dark-mode .stat-item {
+    background-color: #2d2d2d;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .stat-item:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .stat-number {
+    color: #3498db;
+}
+
+body.dark-mode .stat-label {
     color: #b0b0b0;
 }
 

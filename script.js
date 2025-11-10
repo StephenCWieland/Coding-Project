@@ -201,4 +201,45 @@ if (scrollToTopBtn) {
             behavior: 'smooth'
         });
     });
+}
+
+// Animated stats counter
+function animateStats() {
+    const stats = document.querySelectorAll('.stat-number');
+    
+    stats.forEach(stat => {
+        const target = parseInt(stat.getAttribute('data-target'));
+        const duration = 2000; // 2 seconds
+        const increment = target / (duration / 16); // 60fps
+        let current = 0;
+        
+        const updateStat = () => {
+            current += increment;
+            if (current < target) {
+                stat.textContent = Math.floor(current);
+                requestAnimationFrame(updateStat);
+            } else {
+                stat.textContent = target;
+            }
+        };
+        
+        // Start animation when element is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateStat();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(stat);
+    });
+}
+
+// Initialize stats animation when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', animateStats);
+} else {
+    animateStats();
 } 
