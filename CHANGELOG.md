@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.7.0...v1.8.0) (2025-11-10)
+
+
+### Features
+
+* add site-wide search functionality with real-time results ([574ae21](https://github.com/StephenCWieland/Coding-Project/commit/574ae21a49dafb907298fa4318c56e2f317e4206))
+
 # [1.7.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.6.0...v1.7.0) (2025-11-10)
 
 
