@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.3.1...v1.4.0) (2025-11-10)
+
+
+### Features
+
+* add scroll to top button ([9512526](https://github.com/StephenCWieland/Coding-Project/commit/951252628844e455ea622234a2cebf0069265ff8))
+
 ## [1.3.1](https://github.com/StephenCWieland/Coding-Project/compare/v1.3.0...v1.3.1) (2025-11-10)
 
 
