@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/StephenCWieland/Coding-Project/compare/v1.3.0...v1.3.1) (2025-11-10)
+
+
+### Bug Fixes
+
+* remove non-existent @semantic-release/slack package ([c21802a](https://github.com/StephenCWieland/Coding-Project/commit/c21802a2050c9935f0b1b00ac2e0923ac2dfd093))
+
 # [1.3.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.2.0...v1.3.0) (2025-11-10)
 
 
