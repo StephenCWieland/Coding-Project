@@ -52,4 +52,26 @@ window.addEventListener('scroll', function() {
             section.style.transform = 'translateY(0)';
         }
     });
+});
+
+// Dark mode toggle functionality
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const body = document.body;
+
+// Check for saved theme preference or default to light mode
+const currentTheme = localStorage.getItem('theme') || 'light';
+if (currentTheme === 'dark') {
+    body.classList.add('dark-mode');
+    darkModeToggle.textContent = '☀️';
+}
+
+darkModeToggle.addEventListener('click', function() {
+    body.classList.toggle('dark-mode');
+    const isDarkMode = body.classList.contains('dark-mode');
+    
+    // Save theme preference
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    
+    // Update button icon
+    darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
 }); 
