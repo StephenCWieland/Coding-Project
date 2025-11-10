@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.5.0...v1.6.0) (2025-11-10)
+
+
+### Features
+
+* test semver ([#10](https://github.com/StephenCWieland/Coding-Project/issues/10)) ([af9463b](https://github.com/StephenCWieland/Coding-Project/commit/af9463b92b3f8e26921bf1e2da0bef409d7f4f87))
+
 # [1.5.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.4.0...v1.5.0) (2025-11-10)
 
 
