@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.4.0...v1.5.0) (2025-11-10)
+
+
+### Features
+
+* add animated stats counter to hero section ([e52eced](https://github.com/StephenCWieland/Coding-Project/commit/e52eced1dfc8f96c947726f7ca0a7902323bd6f7))
+
 # [1.4.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.3.1...v1.4.0) (2025-11-10)
 
 
