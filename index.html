@@ -13,6 +13,7 @@
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
@@ -55,6 +56,58 @@
                     <button id="increment-btn" class="counter-btn">+</button>
                     <button id="decrement-btn" class="counter-btn">-</button>
                     <button id="reset-btn" class="counter-btn reset">Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="dashboard">
+            <h2>User Dashboard</h2>
+            <div class="dashboard-container">
+                <div class="dashboard-widgets">
+                    <div class="widget">
+                        <h3>Activity Summary</h3>
+                        <div class="widget-content">
+                            <div class="metric">
+                                <span class="metric-value" id="total-views">0</span>
+                                <span class="metric-label">Total Views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value" id="active-users">0</span>
+                                <span class="metric-label">Active Users</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value" id="sessions">0</span>
+                                <span class="metric-label">Sessions</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="widget">
+                        <h3>Quick Actions</h3>
+                        <div class="widget-content">
+                            <button class="action-btn" id="refresh-data">Refresh Data</button>
+                            <button class="action-btn" id="export-data">Export Data</button>
+                            <button class="action-btn" id="reset-dashboard">Reset Dashboard</button>
+                        </div>
+                    </div>
+                    
+                    <div class="widget">
+                        <h3>Recent Activity</h3>
+                        <div class="widget-content">
+                            <ul class="activity-list" id="activity-list">
+                                <li>No recent activity</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="widget">
+                        <h3>Performance Chart</h3>
+                        <div class="widget-content">
+                            <div class="chart-container">
+                                <canvas id="performance-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

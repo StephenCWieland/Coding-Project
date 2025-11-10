@@ -242,4 +242,206 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', animateStats);
 } else {
     animateStats();
+}
+
+// Dashboard functionality
+class Dashboard {
+    constructor() {
+        this.metrics = {
+            totalViews: parseInt(localStorage.getItem('dashboard-views') || '0'),
+            activeUsers: parseInt(localStorage.getItem('dashboard-users') || '0'),
+            sessions: parseInt(localStorage.getItem('dashboard-sessions') || '0')
+        };
+        this.activities = JSON.parse(localStorage.getItem('dashboard-activities') || '[]');
+        this.init();
+    }
+
+    init() {
+        this.updateMetrics();
+        this.setupEventListeners();
+        this.renderActivityList();
+        this.initChart();
+        this.trackPageView();
+    }
+
+    trackPageView() {
+        this.metrics.totalViews++;
+        this.metrics.sessions++;
+        this.saveMetrics();
+        this.updateMetrics();
+        this.addActivity('Page viewed', 'info');
+    }
+
+    updateMetrics() {
+        const totalViewsEl = document.getElementById('total-views');
+        const activeUsersEl = document.getElementById('active-users');
+        const sessionsEl = document.getElementById('sessions');
+
+        if (totalViewsEl) {
+            this.animateValue(totalViewsEl, parseInt(totalViewsEl.textContent) || 0, this.metrics.totalViews, 1000);
+        }
+        if (activeUsersEl) {
+            this.animateValue(activeUsersEl, parseInt(activeUsersEl.textContent) || 0, this.metrics.activeUsers, 1000);
+        }
+        if (sessionsEl) {
+            this.animateValue(sessionsEl, parseInt(sessionsEl.textContent) || 0, this.metrics.sessions, 1000);
+        }
+    }
+
+    animateValue(element, start, end, duration) {
+        const range = end - start;
+        const increment = range / (duration / 16);
+        let current = start;
+
+        const update = () => {
+            current += increment;
+            if ((increment > 0 && current < end) || (increment < 0 && current > end)) {
+                element.textContent = Math.floor(current);
+                requestAnimationFrame(update);
+            } else {
+                element.textContent = end;
+            }
+        };
+
+        update();
+    }
+
+    setupEventListeners() {
+        const refreshBtn = document.getElementById('refresh-data');
+        const exportBtn = document.getElementById('export-data');
+        const resetBtn = document.getElementById('reset-dashboard');
+
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => this.refreshData());
+        }
+
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.exportData());
+        }
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.resetDashboard());
+        }
+    }
+
+    refreshData() {
+        this.metrics.activeUsers = Math.floor(Math.random() * 100) + 50;
+        this.saveMetrics();
+        this.updateMetrics();
+        this.addActivity('Data refreshed', 'success');
+        showToast('Dashboard data refreshed successfully', 'success');
+    }
+
+    exportData() {
+        const data = {
+            metrics: this.metrics,
+            activities: this.activities,
+            exportDate: new Date().toISOString()
+        };
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `dashboard-export-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        this.addActivity('Data exported', 'success');
+        showToast('Dashboard data exported successfully', 'success');
+    }
+
+    resetDashboard() {
+        if (confirm('Are you sure you want to reset all dashboard data?')) {
+            this.metrics = { totalViews: 0, activeUsers: 0, sessions: 0 };
+            this.activities = [];
+            this.saveMetrics();
+            localStorage.removeItem('dashboard-activities');
+            this.updateMetrics();
+            this.renderActivityList();
+            this.initChart();
+            this.addActivity('Dashboard reset', 'warning');
+            showToast('Dashboard has been reset', 'info');
+        }
+    }
+
+    addActivity(message, type = 'info') {
+        const activity = {
+            message,
+            type,
+            timestamp: new Date().toLocaleTimeString()
+        };
+        this.activities.unshift(activity);
+        if (this.activities.length > 10) {
+            this.activities = this.activities.slice(0, 10);
+        }
+        localStorage.setItem('dashboard-activities', JSON.stringify(this.activities));
+        this.renderActivityList();
+    }
+
+    renderActivityList() {
+        const activityList = document.getElementById('activity-list');
+        if (!activityList) return;
+
+        if (this.activities.length === 0) {
+            activityList.innerHTML = '<li>No recent activity</li>';
+            return;
+        }
+
+        activityList.innerHTML = this.activities.map(activity => {
+            const icon = activity.type === 'success' ? '✅' : activity.type === 'warning' ? '⚠️' : 'ℹ️';
+            return `<li><span class="activity-icon">${icon}</span> <span class="activity-message">${activity.message}</span> <span class="activity-time">${activity.timestamp}</span></li>`;
+        }).join('');
+    }
+
+    initChart() {
+        const canvas = document.getElementById('performance-chart');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 200;
+
+        // Generate sample data
+        const data = Array.from({ length: 7 }, () => Math.floor(Math.random() * 100) + 20);
+        const maxValue = Math.max(...data);
+        const barWidth = canvas.width / data.length;
+        const barSpacing = 10;
+
+        // Draw chart
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        data.forEach((value, index) => {
+            const barHeight = (value / maxValue) * (canvas.height - 40);
+            const x = index * barWidth + barSpacing;
+            const y = canvas.height - barHeight - 20;
+
+            // Draw bar
+            ctx.fillStyle = '#3498db';
+            ctx.fillRect(x, y, barWidth - barSpacing * 2, barHeight);
+
+            // Draw value label
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(value, x + (barWidth - barSpacing * 2) / 2, y - 5);
+        });
+    }
+
+    saveMetrics() {
+        localStorage.setItem('dashboard-views', this.metrics.totalViews.toString());
+        localStorage.setItem('dashboard-users', this.metrics.activeUsers.toString());
+        localStorage.setItem('dashboard-sessions', this.metrics.sessions.toString());
+    }
+}
+
+// Initialize dashboard when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new Dashboard();
+    });
+} else {
+    new Dashboard();
 } 
