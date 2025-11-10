@@ -444,4 +444,150 @@ if (document.readyState === 'loading') {
     });
 } else {
     new Dashboard();
+}
+
+// Search functionality
+class SearchFeature {
+    constructor() {
+        this.searchInput = document.getElementById('search-input');
+        this.searchBtn = document.getElementById('search-btn');
+        this.searchResults = document.getElementById('search-results');
+        this.searchableContent = this.getSearchableContent();
+        this.init();
+    }
+
+    init() {
+        if (this.searchInput && this.searchBtn) {
+            this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+            this.searchBtn.addEventListener('click', () => this.handleSearch(this.searchInput.value));
+            this.searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.handleSearch(this.searchInput.value);
+                }
+            });
+
+            // Close results when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-container')) {
+                    this.hideResults();
+                }
+            });
+        }
+    }
+
+    getSearchableContent() {
+        const sections = document.querySelectorAll('section');
+        const content = [];
+
+        sections.forEach(section => {
+            const id = section.id;
+            const heading = section.querySelector('h1, h2, h3');
+            const text = section.textContent.trim();
+            const headingText = heading ? heading.textContent : '';
+
+            content.push({
+                id,
+                heading: headingText,
+                text: text.substring(0, 200), // Limit text length
+                element: section
+            });
+        });
+
+        return content;
+    }
+
+    handleSearch(query) {
+        if (!query || query.trim().length < 2) {
+            this.hideResults();
+            return;
+        }
+
+        const results = this.searchContent(query.toLowerCase());
+        this.displayResults(results, query);
+    }
+
+    searchContent(query) {
+        return this.searchableContent
+            .filter(item => {
+                return item.heading.toLowerCase().includes(query) ||
+                       item.text.toLowerCase().includes(query);
+            })
+            .slice(0, 5); // Limit to 5 results
+    }
+
+    displayResults(results, query) {
+        if (!this.searchResults) return;
+
+        if (results.length === 0) {
+            this.searchResults.innerHTML = '<div class="search-result-item no-results">No results found</div>';
+            this.searchResults.classList.add('show');
+            return;
+        }
+
+        this.searchResults.innerHTML = results.map(result => {
+            const highlightedHeading = this.highlightText(result.heading, query);
+            return `
+                <div class="search-result-item" data-section="${result.id}">
+                    <div class="result-heading">${highlightedHeading}</div>
+                    <div class="result-preview">${this.getPreview(result.text, query)}</div>
+                </div>
+            `;
+        }).join('');
+
+        // Add click handlers
+        this.searchResults.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = item.getAttribute('data-section');
+                if (sectionId) {
+                    this.navigateToSection(sectionId);
+                }
+            });
+        });
+
+        this.searchResults.classList.add('show');
+    }
+
+    highlightText(text, query) {
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    }
+
+    getPreview(text, query) {
+        const index = text.toLowerCase().indexOf(query);
+        if (index === -1) return text.substring(0, 60) + '...';
+        
+        const start = Math.max(0, index - 20);
+        const end = Math.min(text.length, index + query.length + 40);
+        let preview = text.substring(start, end);
+        
+        if (start > 0) preview = '...' + preview;
+        if (end < text.length) preview = preview + '...';
+        
+        return this.highlightText(preview, query);
+    }
+
+    navigateToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+            this.hideResults();
+            this.searchInput.value = '';
+            showToast(`Navigated to ${sectionId} section`, 'success');
+        }
+    }
+
+    hideResults() {
+        if (this.searchResults) {
+            this.searchResults.classList.remove('show');
+        }
+    }
+}
+
+// Initialize search feature
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new SearchFeature();
+    });
+} else {
+    new SearchFeature();
 } 
