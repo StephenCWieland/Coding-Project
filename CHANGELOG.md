@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.1.0...v1.2.0) (2025-11-10)
+
+
+### Features
+
+* add interactive counter widget ([c25f94a](https://github.com/StephenCWieland/Coding-Project/commit/c25f94ae9a7e71d32e32065ba50fd7124fce60eb))
+
 # [1.1.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.0.0...v1.1.0) (2025-11-10)
 
 
