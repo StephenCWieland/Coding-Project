@@ -74,4 +74,50 @@ darkModeToggle.addEventListener('click', function() {
     
     // Update button icon
     darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
-}); 
+});
+
+// Interactive counter functionality
+const counterValue = document.getElementById('counter-value');
+const incrementBtn = document.getElementById('increment-btn');
+const decrementBtn = document.getElementById('decrement-btn');
+const resetBtn = document.getElementById('reset-btn');
+
+// Load counter value from localStorage or default to 0
+let count = parseInt(localStorage.getItem('counter') || '0');
+counterValue.textContent = count;
+
+// Update counter display
+function updateCounter() {
+    counterValue.textContent = count;
+    localStorage.setItem('counter', count.toString());
+    
+    // Add animation effect
+    counterValue.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+        counterValue.style.transform = 'scale(1)';
+    }, 200);
+}
+
+// Increment button
+if (incrementBtn) {
+    incrementBtn.addEventListener('click', function() {
+        count++;
+        updateCounter();
+    });
+}
+
+// Decrement button
+if (decrementBtn) {
+    decrementBtn.addEventListener('click', function() {
+        count--;
+        updateCounter();
+    });
+}
+
+// Reset button
+if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+        count = 0;
+        updateCounter();
+    });
+} 

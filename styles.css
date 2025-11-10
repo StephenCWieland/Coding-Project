@@ -107,6 +107,74 @@ section {
     margin-bottom: 1rem;
 }
 
+/* Counter widget */
+.counter-widget {
+    margin-top: 3rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.counter-widget h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.counter-display {
+    margin: 2rem 0;
+}
+
+#counter-value {
+    display: inline-block;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #3498db;
+    min-width: 100px;
+    transition: transform 0.2s ease;
+}
+
+.counter-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.counter-btn {
+    padding: 0.8rem 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 60px;
+}
+
+.counter-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.counter-btn:active {
+    transform: translateY(0);
+}
+
+.counter-btn.reset {
+    background-color: #e74c3c;
+    font-size: 1rem;
+}
+
+.counter-btn.reset:hover {
+    background-color: #c0392b;
+}
+
 /* Contact section */
 .contact {
     background-color: #f8f9fa;
@@ -224,6 +292,18 @@ body.dark-mode .about {
 
 body.dark-mode .about h2 {
     color: #e0e0e0;
+}
+
+body.dark-mode .counter-widget {
+    background-color: #2d2d2d;
+}
+
+body.dark-mode .counter-widget h3 {
+    color: #e0e0e0;
+}
+
+body.dark-mode #counter-value {
+    color: #3498db;
 }
 
 body.dark-mode .contact {
