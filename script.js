@@ -24,8 +24,8 @@ if (contactForm) {
         // Here you would typically send the data to a server
         console.log('Form submitted:', formObject);
         
-        // Show success message
-        alert('Thank you for your message, my dude! We will get back to you soon.');
+        // Show success message using toast notification
+        showToast('Thank you for your message! We will get back to you soon.', 'success');
         this.reset();
     });
 }
@@ -103,6 +103,7 @@ if (incrementBtn) {
     incrementBtn.addEventListener('click', function() {
         count++;
         updateCounter();
+        showToast(`Counter increased to ${count}`, 'success');
     });
 }
 
@@ -111,6 +112,7 @@ if (decrementBtn) {
     decrementBtn.addEventListener('click', function() {
         count--;
         updateCounter();
+        showToast(`Counter decreased to ${count}`, 'info');
     });
 }
 
@@ -119,5 +121,62 @@ if (resetBtn) {
     resetBtn.addEventListener('click', function() {
         count = 0;
         updateCounter();
+        showToast('Counter reset to 0', 'info');
     });
+}
+
+// Toast notification system
+function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    // Add icon based on type
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'warning') icon = '⚠️';
+    
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+        <button class="toast-close" aria-label="Close">×</button>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // Auto remove after 5 seconds
+    const autoRemove = setTimeout(() => {
+        removeToast(toast);
+    }, 5000);
+    
+    // Close button functionality
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', () => {
+        clearTimeout(autoRemove);
+        removeToast(toast);
+    });
+    
+    // Click to dismiss
+    toast.addEventListener('click', () => {
+        clearTimeout(autoRemove);
+        removeToast(toast);
+    });
+}
+
+function removeToast(toast) {
+    toast.classList.remove('show');
+    toast.classList.add('hide');
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 300);
 } 
