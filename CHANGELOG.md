@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.6.0...v1.7.0) (2025-11-10)
+
+
+### Features
+
+* add comprehensive user dashboard with metrics, activity tracking, and performance charts ([585a87c](https://github.com/StephenCWieland/Coding-Project/commit/585a87cefbf34f91300eca21bb3815d34bf4d7fd))
+
 # [1.6.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.5.0...v1.6.0) (2025-11-10)
 
 
