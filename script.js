@@ -963,4 +963,225 @@ class AnalyticsTracker {
 const analytics = new AnalyticsTracker();
 
 // Make analytics available globally for debugging
-window.analytics = analytics; 
+window.analytics = analytics;
+
+// Theme Customizer functionality
+class ThemeCustomizer {
+    constructor() {
+        this.customizerPanel = document.getElementById('theme-customizer');
+        this.toggleBtn = document.getElementById('theme-customizer-toggle');
+        this.closeBtn = document.getElementById('close-customizer');
+        this.primaryColorInput = document.getElementById('primary-color');
+        this.primaryColorText = document.getElementById('primary-color-text');
+        this.secondaryColorInput = document.getElementById('secondary-color');
+        this.secondaryColorText = document.getElementById('secondary-color-text');
+        this.accentColorInput = document.getElementById('accent-color');
+        this.accentColorText = document.getElementById('accent-color-text');
+        this.fontSizeSlider = document.getElementById('font-size');
+        this.fontSizeValue = document.getElementById('font-size-value');
+        this.borderRadiusSlider = document.getElementById('border-radius');
+        this.borderRadiusValue = document.getElementById('border-radius-value');
+        this.resetBtn = document.getElementById('reset-theme');
+        this.saveBtn = document.getElementById('save-theme');
+        
+        this.defaultTheme = {
+            primary: '#3498db',
+            secondary: '#2c3e50',
+            accent: '#e74c3c',
+            fontSize: 16,
+            borderRadius: 5
+        };
+        
+        this.init();
+    }
+
+    init() {
+        this.loadSavedTheme();
+        this.setupEventListeners();
+        this.applyTheme();
+    }
+
+    setupEventListeners() {
+        if (this.toggleBtn) {
+            this.toggleBtn.addEventListener('click', () => this.togglePanel());
+        }
+
+        if (this.closeBtn) {
+            this.closeBtn.addEventListener('click', () => this.closePanel());
+        }
+
+        // Color pickers
+        if (this.primaryColorInput && this.primaryColorText) {
+            this.primaryColorInput.addEventListener('input', (e) => {
+                this.primaryColorText.value = e.target.value;
+                this.applyTheme();
+            });
+            this.primaryColorText.addEventListener('input', (e) => {
+                if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                    this.primaryColorInput.value = e.target.value;
+                    this.applyTheme();
+                }
+            });
+        }
+
+        if (this.secondaryColorInput && this.secondaryColorText) {
+            this.secondaryColorInput.addEventListener('input', (e) => {
+                this.secondaryColorText.value = e.target.value;
+                this.applyTheme();
+            });
+            this.secondaryColorText.addEventListener('input', (e) => {
+                if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                    this.secondaryColorInput.value = e.target.value;
+                    this.applyTheme();
+                }
+            });
+        }
+
+        if (this.accentColorInput && this.accentColorText) {
+            this.accentColorInput.addEventListener('input', (e) => {
+                this.accentColorText.value = e.target.value;
+                this.applyTheme();
+            });
+            this.accentColorText.addEventListener('input', (e) => {
+                if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                    this.accentColorInput.value = e.target.value;
+                    this.applyTheme();
+                }
+            });
+        }
+
+        // Sliders
+        if (this.fontSizeSlider && this.fontSizeValue) {
+            this.fontSizeSlider.addEventListener('input', (e) => {
+                this.fontSizeValue.textContent = `${e.target.value}px`;
+                this.applyTheme();
+            });
+        }
+
+        if (this.borderRadiusSlider && this.borderRadiusValue) {
+            this.borderRadiusSlider.addEventListener('input', (e) => {
+                this.borderRadiusValue.textContent = `${e.target.value}px`;
+                this.applyTheme();
+            });
+        }
+
+        if (this.resetBtn) {
+            this.resetBtn.addEventListener('click', () => this.resetTheme());
+        }
+
+        if (this.saveBtn) {
+            this.saveBtn.addEventListener('click', () => this.saveTheme());
+        }
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.customizerPanel?.classList.contains('show')) {
+                this.closePanel();
+            }
+        });
+    }
+
+    togglePanel() {
+        if (this.customizerPanel) {
+            this.customizerPanel.classList.toggle('show');
+        }
+    }
+
+    closePanel() {
+        if (this.customizerPanel) {
+            this.customizerPanel.classList.remove('show');
+        }
+    }
+
+    getCurrentTheme() {
+        return {
+            primary: this.primaryColorInput?.value || this.defaultTheme.primary,
+            secondary: this.secondaryColorInput?.value || this.defaultTheme.secondary,
+            accent: this.accentColorInput?.value || this.defaultTheme.accent,
+            fontSize: parseInt(this.fontSizeSlider?.value) || this.defaultTheme.fontSize,
+            borderRadius: parseInt(this.borderRadiusSlider?.value) || this.defaultTheme.borderRadius
+        };
+    }
+
+    applyTheme() {
+        const theme = this.getCurrentTheme();
+        const root = document.documentElement;
+
+        // Apply CSS custom properties
+        root.style.setProperty('--primary-color', theme.primary);
+        root.style.setProperty('--secondary-color', theme.secondary);
+        root.style.setProperty('--accent-color', theme.accent);
+        root.style.setProperty('--base-font-size', `${theme.fontSize}px`);
+        root.style.setProperty('--border-radius', `${theme.borderRadius}px`);
+
+        // Apply to specific elements
+        document.querySelectorAll('.cta-button, .action-btn, .counter-btn').forEach(btn => {
+            btn.style.backgroundColor = theme.primary;
+            btn.style.borderRadius = `${theme.borderRadius}px`;
+        });
+
+        document.querySelectorAll('h1, h2, h3').forEach(heading => {
+            heading.style.color = theme.secondary;
+        });
+
+        document.querySelectorAll('.stat-number, .metric-value, #counter-value').forEach(el => {
+            el.style.color = theme.primary;
+        });
+    }
+
+    saveTheme() {
+        const theme = this.getCurrentTheme();
+        localStorage.setItem('custom-theme', JSON.stringify(theme));
+        showToast('Theme saved successfully!', 'success');
+        this.closePanel();
+    }
+
+    loadSavedTheme() {
+        const saved = localStorage.getItem('custom-theme');
+        if (saved) {
+            try {
+                const theme = JSON.parse(saved);
+                if (this.primaryColorInput) this.primaryColorInput.value = theme.primary;
+                if (this.primaryColorText) this.primaryColorText.value = theme.primary;
+                if (this.secondaryColorInput) this.secondaryColorInput.value = theme.secondary;
+                if (this.secondaryColorText) this.secondaryColorText.value = theme.secondary;
+                if (this.accentColorInput) this.accentColorInput.value = theme.accent;
+                if (this.accentColorText) this.accentColorText.value = theme.accent;
+                if (this.fontSizeSlider) this.fontSizeSlider.value = theme.fontSize;
+                if (this.fontSizeValue) this.fontSizeValue.textContent = `${theme.fontSize}px`;
+                if (this.borderRadiusSlider) this.borderRadiusSlider.value = theme.borderRadius;
+                if (this.borderRadiusValue) this.borderRadiusValue.textContent = `${theme.borderRadius}px`;
+            } catch (e) {
+                console.error('Error loading saved theme:', e);
+            }
+        }
+    }
+
+    resetTheme() {
+        if (confirm('Reset theme to default settings?')) {
+            if (this.primaryColorInput) this.primaryColorInput.value = this.defaultTheme.primary;
+            if (this.primaryColorText) this.primaryColorText.value = this.defaultTheme.primary;
+            if (this.secondaryColorInput) this.secondaryColorInput.value = this.defaultTheme.secondary;
+            if (this.secondaryColorText) this.secondaryColorText.value = this.defaultTheme.secondary;
+            if (this.accentColorInput) this.accentColorInput.value = this.defaultTheme.accent;
+            if (this.accentColorText) this.accentColorText.value = this.defaultTheme.accent;
+            if (this.fontSizeSlider) this.fontSizeSlider.value = this.defaultTheme.fontSize;
+            if (this.fontSizeValue) this.fontSizeValue.textContent = `${this.defaultTheme.fontSize}px`;
+            if (this.borderRadiusSlider) this.borderRadiusSlider.value = this.defaultTheme.borderRadius;
+            if (this.borderRadiusValue) this.borderRadiusValue.textContent = `${this.defaultTheme.borderRadius}px`;
+            
+            localStorage.removeItem('custom-theme');
+            this.applyTheme();
+            showToast('Theme reset to default', 'info');
+        }
+    }
+}
+
+// Initialize theme customizer
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new ThemeCustomizer();
+    });
+} else {
+    new ThemeCustomizer();
+} 
