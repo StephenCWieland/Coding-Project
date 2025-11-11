@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.9.0...v1.10.0) (2025-11-11)
+
+
+### Features
+
+* add theme customizer with color pickers and style controls ([#15](https://github.com/StephenCWieland/Coding-Project/issues/15)) ([dedd153](https://github.com/StephenCWieland/Coding-Project/commit/dedd15343535e5ead6d727608fa738be6d61f76c))
+
 # [1.9.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.8.0...v1.9.0) (2025-11-11)
 
 
