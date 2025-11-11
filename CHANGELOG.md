@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.8.0...v1.9.0) (2025-11-11)
+
+
+### Features
+
+* add analytics tracking system and restore git plugin for version tracking ([#14](https://github.com/StephenCWieland/Coding-Project/issues/14)) ([cfb3223](https://github.com/StephenCWieland/Coding-Project/commit/cfb3223c705078fcf9d4ff8ea0cc746d79559a32))
+
 # [1.8.0](https://github.com/StephenCWieland/Coding-Project/compare/v1.7.0...v1.8.0) (2025-11-10)
 
 
