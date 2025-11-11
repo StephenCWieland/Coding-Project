@@ -786,4 +786,181 @@ if (document.readyState === 'loading') {
     });
 } else {
     new NotificationsCenter();
-} 
+}
+
+// Analytics tracking functionality
+class AnalyticsTracker {
+    constructor() {
+        this.sessionId = this.generateSessionId();
+        this.startTime = Date.now();
+        this.events = JSON.parse(localStorage.getItem('analytics-events') || '[]');
+        this.pageViews = parseInt(localStorage.getItem('analytics-pageviews') || '0');
+        this.init();
+    }
+
+    init() {
+        this.trackPageView();
+        this.trackUserInteractions();
+        this.trackScrollDepth();
+        this.trackTimeOnPage();
+        this.saveAnalytics();
+    }
+
+    generateSessionId() {
+        const stored = sessionStorage.getItem('analytics-session-id');
+        if (stored) return stored;
+        
+        const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        sessionStorage.setItem('analytics-session-id', sessionId);
+        return sessionId;
+    }
+
+    trackPageView() {
+        this.pageViews++;
+        const event = {
+            type: 'pageview',
+            timestamp: new Date().toISOString(),
+            sessionId: this.sessionId,
+            url: window.location.href,
+            referrer: document.referrer || 'direct'
+        };
+        this.events.push(event);
+        localStorage.setItem('analytics-pageviews', this.pageViews.toString());
+    }
+
+    trackUserInteractions() {
+        // Track button clicks
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('button, a, .cta-button, .action-btn')) {
+                this.trackEvent('click', {
+                    element: e.target.tagName,
+                    text: e.target.textContent.trim().substring(0, 50),
+                    id: e.target.id || 'no-id',
+                    className: e.target.className || 'no-class'
+                });
+            }
+        });
+
+        // Track form submissions
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                this.trackEvent('form_submit', {
+                    formId: form.id || 'no-id',
+                    formAction: form.action || 'no-action'
+                });
+            });
+        });
+    }
+
+    trackScrollDepth() {
+        let maxScroll = 0;
+        const milestones = [25, 50, 75, 100];
+        const trackedMilestones = new Set();
+
+        window.addEventListener('scroll', () => {
+            const scrollPercent = Math.round(
+                (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+            );
+            
+            if (scrollPercent > maxScroll) {
+                maxScroll = scrollPercent;
+                
+                milestones.forEach(milestone => {
+                    if (scrollPercent >= milestone && !trackedMilestones.has(milestone)) {
+                        trackedMilestones.add(milestone);
+                        this.trackEvent('scroll_depth', {
+                            depth: milestone,
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    trackTimeOnPage() {
+        // Track time on page when user leaves
+        window.addEventListener('beforeunload', () => {
+            const timeOnPage = Math.round((Date.now() - this.startTime) / 1000);
+            this.trackEvent('time_on_page', {
+                seconds: timeOnPage,
+                sessionId: this.sessionId
+            }, true); // Save immediately
+        });
+
+        // Track every 30 seconds
+        setInterval(() => {
+            const timeOnPage = Math.round((Date.now() - this.startTime) / 1000);
+            if (timeOnPage % 30 === 0) {
+                this.trackEvent('time_checkpoint', {
+                    seconds: timeOnPage
+                });
+            }
+        }, 1000);
+    }
+
+    trackEvent(eventType, data = {}, immediate = false) {
+        const event = {
+            type: eventType,
+            timestamp: new Date().toISOString(),
+            sessionId: this.sessionId,
+            data: data
+        };
+        
+        this.events.push(event);
+        
+        // Keep only last 1000 events
+        if (this.events.length > 1000) {
+            this.events = this.events.slice(-1000);
+        }
+        
+        if (immediate) {
+            this.saveAnalytics();
+        }
+    }
+
+    getAnalyticsSummary() {
+        const today = new Date().toISOString().split('T')[0];
+        const todayEvents = this.events.filter(e => e.timestamp.startsWith(today));
+        
+        return {
+            totalPageViews: this.pageViews,
+            totalEvents: this.events.length,
+            todayEvents: todayEvents.length,
+            sessionId: this.sessionId,
+            timeOnPage: Math.round((Date.now() - this.startTime) / 1000)
+        };
+    }
+
+    exportAnalytics() {
+        const summary = this.getAnalyticsSummary();
+        const exportData = {
+            summary,
+            events: this.events,
+            exportDate: new Date().toISOString()
+        };
+        
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `analytics-export-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('Analytics data exported successfully', 'success');
+    }
+
+    saveAnalytics() {
+        localStorage.setItem('analytics-events', JSON.stringify(this.events));
+    }
+}
+
+// Initialize analytics tracker
+const analytics = new AnalyticsTracker();
+
+// Make analytics available globally for debugging
+window.analytics = analytics; 
