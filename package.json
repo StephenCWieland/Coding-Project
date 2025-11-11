@@ -1,6 +1,6 @@
 {
   "name": "simple-website",
-  "version": "1.8.0",
+  "version": "1.7.0",
   "description": "A simple website deployed on Google Cloud Run",
   "main": "server.js",
   "scripts": {

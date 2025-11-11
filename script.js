@@ -590,4 +590,200 @@ if (document.readyState === 'loading') {
     });
 } else {
     new SearchFeature();
+}
+
+// Notifications Center functionality
+class NotificationsCenter {
+    constructor() {
+        this.notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        this.notificationsBtn = document.getElementById('notifications-btn');
+        this.notificationsDropdown = document.getElementById('notifications-dropdown');
+        this.notificationsList = document.getElementById('notifications-list');
+        this.notificationBadge = document.getElementById('notification-badge');
+        this.markAllReadBtn = document.getElementById('mark-all-read');
+        this.init();
+    }
+
+    init() {
+        this.updateBadge();
+        this.renderNotifications();
+        this.setupEventListeners();
+        this.generateSampleNotifications();
+    }
+
+    setupEventListeners() {
+        if (this.notificationsBtn) {
+            this.notificationsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleDropdown();
+            });
+        }
+
+        if (this.markAllReadBtn) {
+            this.markAllReadBtn.addEventListener('click', () => {
+                this.markAllAsRead();
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.notifications-container')) {
+                this.closeDropdown();
+            }
+        });
+    }
+
+    toggleDropdown() {
+        if (this.notificationsDropdown) {
+            this.notificationsDropdown.classList.toggle('show');
+        }
+    }
+
+    closeDropdown() {
+        if (this.notificationsDropdown) {
+            this.notificationsDropdown.classList.remove('show');
+        }
+    }
+
+    generateSampleNotifications() {
+        // Generate some sample notifications if none exist
+        if (this.notifications.length === 0) {
+            const samples = [
+                { id: 1, type: 'info', message: 'Welcome to the website!', timestamp: new Date().toISOString(), read: false },
+                { id: 2, type: 'success', message: 'Your profile has been updated', timestamp: new Date(Date.now() - 3600000).toISOString(), read: false },
+                { id: 3, type: 'warning', message: 'Please complete your profile setup', timestamp: new Date(Date.now() - 7200000).toISOString(), read: false }
+            ];
+            this.notifications = samples;
+            this.saveNotifications();
+            this.updateBadge();
+            this.renderNotifications();
+        }
+    }
+
+    addNotification(type, message) {
+        const notification = {
+            id: Date.now(),
+            type,
+            message,
+            timestamp: new Date().toISOString(),
+            read: false
+        };
+        this.notifications.unshift(notification);
+        if (this.notifications.length > 20) {
+            this.notifications = this.notifications.slice(0, 20);
+        }
+        this.saveNotifications();
+        this.updateBadge();
+        this.renderNotifications();
+        this.showNotificationToast(notification);
+    }
+
+    markAsRead(id) {
+        const notification = this.notifications.find(n => n.id === id);
+        if (notification && !notification.read) {
+            notification.read = true;
+            this.saveNotifications();
+            this.updateBadge();
+            this.renderNotifications();
+        }
+    }
+
+    markAllAsRead() {
+        this.notifications.forEach(n => n.read = true);
+        this.saveNotifications();
+        this.updateBadge();
+        this.renderNotifications();
+        showToast('All notifications marked as read', 'success');
+    }
+
+    deleteNotification(id) {
+        this.notifications = this.notifications.filter(n => n.id !== id);
+        this.saveNotifications();
+        this.updateBadge();
+        this.renderNotifications();
+    }
+
+    updateBadge() {
+        const unreadCount = this.notifications.filter(n => !n.read).length;
+        if (this.notificationBadge) {
+            this.notificationBadge.textContent = unreadCount;
+            this.notificationBadge.style.display = unreadCount > 0 ? 'block' : 'none';
+        }
+    }
+
+    renderNotifications() {
+        if (!this.notificationsList) return;
+
+        if (this.notifications.length === 0) {
+            this.notificationsList.innerHTML = '<div class="no-notifications">No notifications</div>';
+            return;
+        }
+
+        this.notificationsList.innerHTML = this.notifications.map(notification => {
+            const timeAgo = this.getTimeAgo(new Date(notification.timestamp));
+            const icon = notification.type === 'success' ? '✅' : 
+                        notification.type === 'warning' ? '⚠️' : 
+                        notification.type === 'error' ? '❌' : 'ℹ️';
+            const readClass = notification.read ? 'read' : '';
+            
+            return `
+                <div class="notification-item ${readClass}" data-id="${notification.id}">
+                    <div class="notification-icon">${icon}</div>
+                    <div class="notification-content">
+                        <div class="notification-message">${notification.message}</div>
+                        <div class="notification-time">${timeAgo}</div>
+                    </div>
+                    <button class="notification-delete" data-id="${notification.id}" aria-label="Delete notification">×</button>
+                </div>
+            `;
+        }).join('');
+
+        // Add event listeners
+        this.notificationsList.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('notification-delete')) {
+                    const id = parseInt(item.getAttribute('data-id'));
+                    this.markAsRead(id);
+                }
+            });
+        });
+
+        this.notificationsList.querySelectorAll('.notification-delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.getAttribute('data-id'));
+                this.deleteNotification(id);
+            });
+        });
+    }
+
+    getTimeAgo(date) {
+        const now = new Date();
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+
+        if (minutes < 1) return 'Just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        return `${days}d ago`;
+    }
+
+    showNotificationToast(notification) {
+        showToast(notification.message, notification.type);
+    }
+
+    saveNotifications() {
+        localStorage.setItem('notifications', JSON.stringify(this.notifications));
+    }
+}
+
+// Initialize notifications center
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new NotificationsCenter();
+    });
+} else {
+    new NotificationsCenter();
 } 

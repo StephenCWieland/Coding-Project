@@ -22,6 +22,21 @@
                     <button id="search-btn" class="search-btn" aria-label="Search">🔍</button>
                     <div id="search-results" class="search-results"></div>
                 </div>
+                <div class="notifications-container">
+                    <button id="notifications-btn" class="notifications-btn" aria-label="Notifications">
+                        🔔
+                        <span id="notification-badge" class="notification-badge">0</span>
+                    </button>
+                    <div id="notifications-dropdown" class="notifications-dropdown">
+                        <div class="notifications-header">
+                            <h3>Notifications</h3>
+                            <button id="mark-all-read" class="mark-read-btn">Mark all as read</button>
+                        </div>
+                        <div id="notifications-list" class="notifications-list">
+                            <div class="no-notifications">No notifications</div>
+                        </div>
+                    </div>
+                </div>
                 <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
                     🌙
                 </button>
