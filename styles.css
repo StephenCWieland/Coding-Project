@@ -53,11 +53,186 @@ nav {
     color: #3498db;
 }
 
-/* Header actions (search and dark mode) */
+/* Header actions (search, notifications, and dark mode) */
 .header-actions {
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+/* Notifications container */
+.notifications-container {
+    position: relative;
+}
+
+.notifications-btn {
+    position: relative;
+    background: none;
+    border: 2px solid #2c3e50;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notifications-btn:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.1);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.notifications-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 350px;
+    max-height: 500px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.notifications-dropdown.show {
+    display: flex;
+    flex-direction: column;
+}
+
+.notifications-header {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notifications-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.mark-read-btn {
+    background: none;
+    border: none;
+    color: #3498db;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.mark-read-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.notifications-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: relative;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-item.read {
+    opacity: 0.6;
+}
+
+.notification-item.read .notification-message {
+    font-weight: normal;
+}
+
+.notification-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-message {
+    color: #2c3e50;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    word-wrap: break-word;
+}
+
+.notification-time {
+    color: #999;
+    font-size: 0.75rem;
+}
+
+.notification-delete {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+    opacity: 0;
+}
+
+.notification-item:hover .notification-delete {
+    opacity: 1;
+}
+
+.notification-delete:hover {
+    color: #e74c3c;
+}
+
+.no-notifications {
+    padding: 2rem;
+    text-align: center;
+    color: #999;
+    font-size: 0.9rem;
 }
 
 .search-container {
@@ -602,6 +777,59 @@ body.dark-mode .result-preview mark,
 body.dark-mode .result-heading mark {
     background-color: #4a4a00;
     color: #fff;
+}
+
+body.dark-mode .notifications-btn {
+    border-color: #e0e0e0;
+}
+
+body.dark-mode .notifications-btn:hover {
+    background-color: #3d3d3d;
+}
+
+body.dark-mode .notifications-dropdown {
+    background-color: #2d2d2d;
+    border-color: #555;
+}
+
+body.dark-mode .notifications-header {
+    border-bottom-color: #1a1a1a;
+}
+
+body.dark-mode .notifications-header h3 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .mark-read-btn {
+    color: #3498db;
+}
+
+body.dark-mode .mark-read-btn:hover {
+    background-color: #1a1a1a;
+}
+
+body.dark-mode .notification-item:hover {
+    background-color: #1a1a1a;
+}
+
+body.dark-mode .notification-message {
+    color: #e0e0e0;
+}
+
+body.dark-mode .notification-time {
+    color: #999;
+}
+
+body.dark-mode .notification-delete {
+    color: #b0b0b0;
+}
+
+body.dark-mode .notification-delete:hover {
+    color: #e74c3c;
+}
+
+body.dark-mode .no-notifications {
+    color: #999;
 }
 
 body.dark-mode .hero {
